@@ -1,0 +1,27 @@
+.idea/
+/public/uploads
+**/.DS_Store
+.vs_code
+.vscode/
+.cache
+.npm
+.ash_history
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> symfony/asset-mapper ###
+/public/assets/
+###< symfony/asset-mapper ###
+
+.secrets
+
+# Helm
+helm-values-*.yaml
