@@ -1,0 +1,33 @@
+<li class="flex items-center justify-between gap-x-6 py-5 w-full">
+    <a href="{{ path('app_shared_collection_show', {'id': collection.id}) }}" class="flex gap-x-2 w-full">
+        <div class="min-w-0">
+            <div class="flex items-start gap-x-3">
+                <p class="text-sm font-semibold leading-6 text-gray-900">{{ collection.title }}</p>
+            </div>
+            <div class="mt-1 flex items-center gap-x-2 text-xs leading-5 text-gray-500">
+                <p class="truncate">Created
+                    <time datetime="{{ collection.createdAt|date }}">{{ collection.createdAt|time_diff }}</time>
+                </p>
+                <p class="truncate">Owner:
+                    <span>{{ collection.user.name }} ({{ collection.user.email }})</span>
+                </p>
+            </div>
+        </div>
+
+        {% if is_owner is not defined %}{% set is_owner = collection.user == app.user %}{% endif %}
+        {% if can_write is not defined %}{% set can_write = collection.permissions(app.user) == constant('App\\Entity\\EntityWithPermissionsInterface::WRITE_PERMISSION') %}{% endif %}
+        <div class="flex flex-none items-center gap-x-2">
+            {% set edit_path = can_write ? path('app_shared_collection_edit', {'id': collection.id}) : null %}
+            {% set delete_path = is_owner ? {'path': path('app_collection_delete', {'id': collection.id}),'entity_id': collection.id} : null %}
+
+            {% include 'components/_inline_buttons.html.twig' with {
+                'object': collection,
+                'edit': edit_path,
+                'favorite': null,
+                'clone': null,
+                'share': path('app_shared_collection_share', {'id': collection.id}),
+                'delete': delete_path,
+            } %}
+        </div>
+    </a>
+</li>

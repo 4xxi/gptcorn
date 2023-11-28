@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Collection index{% endblock %}
+
+{% block breadcrumbs %}
+    {% include 'default/_breadcrumbs.html.twig' with {
+        'items': [
+            {'name': 'Shared Collections', 'url': '#' },
+        ]
+    } %}
+{% endblock %}
+
+{% block content %}
+    {% include 'components/_heading.html.twig' with {title: 'Shared Collections'} %}
+
+    <div class="mb-4">
+        {% if shared_collections|length > 0 %}
+            <ul role="list" class="divide-y divide-gray-100">
+                {% for shared_collection in shared_collections %}
+                    {% include 'shared_collection/_shared_collection.html.twig' with {'collection': shared_collection.collection} %}
+                {% endfor %}
+            </ul>
+            <div class="navigation">
+                {{ knp_pagination_render(shared_collections) }}
+            </div>
+        {% else %}
+            <div class="mt-8 mb-8 relative block w-full rounded-lg border-2 border-gray-300 p-12 text-center">
+                <span class="mt-2 block text-sm font-semibold text-gray-900">Currently, your shared collections are like an empty inbox – nothing’s arrived yet!</span>
+            </div>
+        {% endif %}
+    </div>
+
+    {% include 'components/_back_button.html.twig' with {'path': path('app_default'), 'label': 'Back to the Dashboard'} %}
+
+{% endblock %}

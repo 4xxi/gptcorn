@@ -1,0 +1,17 @@
+<script>
+    {% for prompt in prompts %}
+    const url{{ prompt.id }} = new URL("{{ mercure('/prompt-updated-' ~ prompt.id)|escape('js') }}");
+
+    const eventSource{{ prompt.id }} = new EventSource(url{{ prompt.id }});
+
+    eventSource{{ prompt.id }}.onmessage = event => {
+        const data = JSON.parse(event.data);
+        console.log('Prompt ID:', data.id, 'Status:', data.status);
+        location.reload();
+    }
+
+    window.addEventListener('beforeunload', () => {
+        eventSource{{ prompt.id }}.close();
+    });
+    {% endfor %}
+</script>

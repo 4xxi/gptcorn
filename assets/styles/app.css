@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+}
+
+main h1 {
+    font-size: large;
+    font-weight: bold;
+}
+
+.disabled {
+    background-color: #dddddd;
+}
+
+form > div > ul > .text-red-700,
+form > div > div > ul > .text-red-700 {
+    color: #c53030;
+}
+
+.-ml-3 {
+    margin-left: -3rem;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loader {
+    animation: spin 1s linear infinite;
+}

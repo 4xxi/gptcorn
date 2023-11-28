@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Placeholder index{% endblock %}
+
+{% block breadcrumbs %}
+    {% include 'default/_breadcrumbs.html.twig' with {
+        'items': [
+            {'name': 'Placeholders', 'url': '#' },
+        ]
+    } %}
+{% endblock %}
+
+{% block content %}
+
+    {% include 'components/_heading_with_button.html.twig' with {
+        'title': 'Placeholders',
+        'buttons': [
+            {'url': path('app_placeholder_new'), 'icon': 'clarity:plus-circle-line'},
+        ]
+    } %}
+
+    <div class="mb-4">
+        {% if placeholders|length > 0 %}
+            <ul role="list" class="divide-y divide-gray-100">
+                {% for placeholder in placeholders %}
+                    {% include 'placeholder/_placeholder.html.twig' with {
+                        'placeholder': placeholder,
+                        'show_categories': true,
+                    } %}
+                {% endfor %}
+            </ul>
+            <div class="navigation">
+                {{ knp_pagination_render(placeholders) }}
+            </div>
+        {% else %}
+            <a href="{{ path('app_placeholder_new') }}"
+               class="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                <iconify-icon icon="bi:collection"
+                              class="mx-auto h-24 w-24 text-[80px] text-gray-400"></iconify-icon>
+                <span class="mt-2 block text-sm font-semibold text-gray-900">Create Your First Placeholder</span>
+            </a>
+        {% endif %}
+    </div>
+
+    {% include 'components/_back_button.html.twig' with {'path': path('app_default'), 'label': 'Back to the Dashboard'} %}
+
+{% endblock %}

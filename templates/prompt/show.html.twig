@@ -1,0 +1,103 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Prompt{% endblock %}
+
+{% block breadcrumbs %}
+    {% include 'default/_breadcrumbs.html.twig' with {
+        'items': [
+            {'name': 'Prompt Runs', 'url': path('app_prompt_index')},
+            {'name': prompt.title, 'url': '#'},
+        ]
+    } %}
+{% endblock %}
+
+{% block content %}
+    {% if prompt.completed %}
+        <div class="px-4 py-6 sm:px-6">
+            <h3 class="text-base font-semibold leading-7 text-gray-900">View Prompt</h3>
+        </div>
+
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 border border-primary rounded max-w-2xl mb-8">
+            <dt class="text-sm font-medium text-gray-900">
+                <div class="flex justify-between items-start">
+                    <h3 class="text-base">Completed</h3>
+                    <div x-data="{ input: '{{ prompt.openaiResponse|e("js") }}' }">
+                        <input x-model="input" class="hidden">
+                        <button type="button" @click="$clipboard(input)">
+                            <iconify-icon icon="mdi:clipboard-outline"
+                                          class="text-2xl text-gray-900 shrink-0"></iconify-icon>
+                        </button>
+                    </div>
+                </div>
+            </dt>
+            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ prompt.openaiResponse|nl2br }}</dd>
+        </div>
+    {% endif %}
+
+    {% if prompt.failed %}
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 border border-error rounded max-w-2xl mb-8">
+            <dt class="text-sm font-medium text-gray-900">
+                <div class="flex justify-between items-start">
+                    <h3 class="text-base">Failed</h3>
+                    <span class="text-2xl text-gray-900 shrink-0"><iconify-icon icon="mdi:alert-circle-outline"></iconify-icon></span>
+                </div>
+            </dt>
+            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"> An error occurred while fetching the response. Please try again later. </dd>
+        </div>
+    {% endif %}
+
+    {% if prompt.inProgress %}
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 border rounded max-w-2xl mb-8">
+            <dt class="text-sm font-medium text-gray-900">
+                <div class="flex justify-between items-start">
+                    <h3 class="text-base">In Progress</h3>
+                    <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 border-t-primary h-6 w-6 mb-4"></div>
+                </div>
+            </dt>
+            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"> Hang tight! We're fetching the results... </dd>
+        </div>
+    {% endif %}
+
+    <div class="border-t border-gray-100 max-w-2xl">
+        <dl class="divide-y divide-gray-100">
+            {% if prompt.title %}
+                <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-900">Title</dt>
+                    <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ prompt.title }}</dd>
+                </div>
+            {% endif %}
+            {% if (prompt.completed) %}
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-900">Content</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                    {{ prompt.contentWithoutPlaceholders|nl2br }}
+                </dd>
+            </div>
+            {% endif %}
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-900">Raw Content</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                    {{ prompt.content|nl2br }}
+                </dd>
+            </div>
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-900">Created</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ prompt.createdAt|date('Y/m/d H:i:s') }}</dd>
+            </div>
+        </dl>
+    </div>
+    {% include 'components/_divider_with_buttons.html.twig' with {
+        'run': path('app_prompt_run', {'id': prompt.id}),
+        'edit': path('app_prompt_edit', {'id': prompt.id}),
+        'delete': {'path': path('app_prompt_delete', {'id': prompt.id}),'entity_id': prompt.id},
+        'clone': path('app_prompt_clone', {'id': prompt.id}),
+    } %}
+
+    {% include 'components/_back_button.html.twig' with {'path': path('app_prompt_index')} %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% include 'js/_prompt_updated_listener.html.twig' with {'prompts': [prompt]} %}
+{% endblock %}

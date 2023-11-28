@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Prompt{% endblock %}
+
+{% block breadcrumbs %}
+    {% include 'default/_breadcrumbs.html.twig' with {
+        'items': [
+            {'name': 'Prompt Runs', 'url': path('app_prompt_index')},
+            {'name': 'New', 'url': '#'},
+        ]
+    } %}
+{% endblock %}
+
+{% block content %}
+    <h1>Create Prompt Run</h1>
+
+    {{ include('prompt/_form.html.twig') }}
+
+    {% include 'components/_back_button.html.twig' with {'path': path('app_prompt_index')} %}
+{% endblock %}

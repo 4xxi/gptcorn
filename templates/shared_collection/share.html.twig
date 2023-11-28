@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Share Collection{% endblock %}
+
+{% block breadcrumbs %}
+    {% include 'default/_breadcrumbs.html.twig' with {
+        'items': [
+            {'name': 'Shared Collections', 'url': path('app_shared_collection_index')},
+            {'name': collection.title, 'url': path('app_collection_show', {'id': collection.id})},
+            {'name': 'Share', 'url': '#'},
+        ]
+    } %}
+{% endblock %}
+
+{% block content %}
+    {% include 'components/_subheading.html.twig' with {'title': 'Share Collection ' ~ '"' ~ collection.title ~ '"'} %}
+
+    <div class="max-w-xl mb-8">
+        {{ include('collection/_form.html.twig') }}
+    </div>
+
+    <div class="mt-1 mb-8">
+        {% if shared_collections|length > 0 %}
+            {% include 'components/_subheading.html.twig' with {'title': 'Manage shares for Collection'} %}
+            {{ include('shared_collection/_manage_shared_collection.html.twig') }}
+        {% endif %}
+    </div>
+
+    {% include 'components/_back_button.html.twig' with {'path': path('app_shared_collection_index')} %}
+
+{% endblock %}

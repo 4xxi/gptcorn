@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Placeholder{% endblock %}
+
+{% block breadcrumbs %}
+    {% include 'default/_breadcrumbs.html.twig' with {
+        'items': [
+            {'name': 'Placeholders', 'url': path('app_placeholder_index')},
+            {'name': 'New', 'url': '#'},
+        ]
+    } %}
+{% endblock %}
+
+{% block content %}
+    {% include 'components/_subheading.html.twig' with {'title': 'Create Placeholder'} %}
+
+    <div class="max-w-xl mb-8">
+        {{ include('placeholder/_form.html.twig') }}
+    </div>
+
+    {% include 'components/_back_button.html.twig' with {'path': path('app_placeholder_index')} %}
+{% endblock %}

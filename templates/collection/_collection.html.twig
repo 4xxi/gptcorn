@@ -1,0 +1,26 @@
+<li class="flex items-center justify-between gap-x-6 py-5 w-full">
+    <a href="{{ path('app_collection_show', {'id': collection.id}) }}" class="flex gap-x-2 w-full">
+        <div class="min-w-0">
+            <div class="flex items-center gap-x-2">
+                <iconify-icon icon="bi:collection"
+                              class=""></iconify-icon>
+                <p class="text-sm font-semibold leading-6 text-gray-900">{{ collection.title }}</p>
+            </div>
+            <div class="mt-1 flex items-center gap-x-2 text-xs leading-5 text-gray-500">
+                <p class="truncate">Created
+                    <time datetime="{{ collection.createdAt|date }}">{{ collection.createdAt|time_diff }}</time>
+                </p>
+            </div>
+        </div>
+        <div class="flex flex-none items-center gap-x-2">
+            {% include 'components/_inline_buttons.html.twig' with {
+                'object': collection,
+                'edit': path('app_collection_edit', {'id': collection.id}),
+                'favorite': path('app_collection_favorite', {'id': collection.id}),
+                'clone': null,
+                'share': path('app_collection_share', {'id': collection.id}),
+                'delete': {'path': path('app_collection_delete', {'id': collection.id}),'entity_id': collection.id},
+            } %}
+        </div>
+    </a>
+</li>

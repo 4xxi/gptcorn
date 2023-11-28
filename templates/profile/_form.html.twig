@@ -1,0 +1,15 @@
+{{ form_start(form) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.email) }}
+    {{ form_row(form.avatarFile) }}
+
+    {{ form_label(form.plainPassword) }}
+    <div class="flex items-center">
+        {{ form_widget(form.plainPassword) }}
+        <button type="button" class="toggle-password" onclick="togglePasswordVisibility()">
+            <iconify-icon icon="bi:eye" id="toggle_password_icon" class="relative mt-2 -ml-3 text-xl inline-flex items-center rounded-md text-gray-400 focus:z-10"></iconify-icon>
+        </button>
+    </div>
+
+{{ form_row(form.Save) }}
+{{ form_end(form) }}

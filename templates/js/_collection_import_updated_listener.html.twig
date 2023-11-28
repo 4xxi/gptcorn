@@ -1,0 +1,15 @@
+<script>
+    const url{{ collectionImport.id }} = new URL("{{ mercure('/import-collection-updated-' ~ collectionImport.id)|escape('js') }}");
+
+    const eventSource{{ collectionImport.id }} = new EventSource(url{{ collectionImport.id }});
+
+    eventSource{{ collectionImport.id }}.onmessage = event => {
+        const data = JSON.parse(event.data);
+        console.log('Collection import ID:', data.id, 'Status:', data.status);
+        location.reload();
+    }
+
+    window.addEventListener('beforeunload', () => {
+        eventSource{{ collectionImport.id }}.close();
+    });
+</script>

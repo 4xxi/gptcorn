@@ -1,0 +1,46 @@
+<li class="flex items-center justify-between gap-x-6 py-5 w-full">
+    <a href="{{ path('app_placeholder_show', {'id': placeholder.id}) }}" class="flex gap-x-2 w-full">
+        <div class="min-w-0">
+            <div class="flex items-start gap-x-3">
+                <p class="text-sm font-semibold leading-6 text-gray-900">{{ placeholder.key }}</p>
+                {% if placeholder.categories is not empty and show_categories is defined and show_categories%}
+                    <p class="rounded-md whitespace-nowrap mt-0.5 px-1.5 py-0.5 text-xs font-medium bg-gray-50 px-2 py-1 text-primary ring-1 ring-inset ring-primary/20">{{ placeholder.categories|join(', ') }}</p>
+                {% endif %}
+            </div>
+            <div class="mt-1 flex items-center gap-x-2 text-xs leading-5 text-gray-500">
+                <p>{{ placeholder.headline }}</p>
+                <svg viewBox="0 0 2 2" class="h-0.5 w-0.5 fill-current">
+                    <circle cx="1" cy="1" r="1"/>
+                </svg>
+                <p class="truncate">Created
+                    <time datetime="{{ placeholder.createdAt|date }}">{{ placeholder.createdAt|time_diff }}</time>
+                </p>
+            </div>
+        </div>
+
+        {% if is_owner is not defined %}{% set is_owner = app.user == placeholder.user %}{% endif %}
+        {% if can_write is not defined %}{% set can_write = placeholder.getPermissions(app.user) == constant('App\\Entity\\EntityWithPermissionsInterface::WRITE_PERMISSION') %}{% endif %}
+        <div class="flex flex-none items-center gap-x-2">
+            {% set favorite_path = is_owner ? path('app_placeholder_favorite', {'id': placeholder.id}) : null %}
+            {% set delete = is_owner ? {'path': path('app_placeholder_delete', {'id': placeholder.id}),'entity_id': placeholder.id} : null %}
+
+            {% set edit_path = null %}
+            {% if can_write %}
+                {% set edit_path = path('app_placeholder_edit', {'id': placeholder.id}) %}
+                {% if collectionId is defined and collectionId %}
+                    {% set edit_path = path('app_placeholder_in_collection_edit', {'id': placeholder.id, 'collectionId': collectionId}) %}
+                {% endif %}
+            {% endif %}
+
+            {% include 'components/_inline_buttons.html.twig' with {
+                'object': placeholder,
+                'favorite': favorite_path,
+                'edit': edit_path,
+                'clone': path('app_placeholder_clone', {'id': placeholder.id}),
+                'share': null,
+                'delete': delete,
+            } %}
+        </div>
+    </a>
+
+</li>

@@ -1,0 +1,4 @@
+CollectionTitle, CollectionDescription, TemplateTitle, TemplateContent, PlaceholderKey, PlaceholderValue, PlaceholderHeadline, PlaceholderDescription
+First Collection CSV,This is a description.,Template Title 1,Template Content {key_first_collection_1},key_first_collection_1,1,Headline Key1,Description Key1
+First Collection CSV,This is a description.,Template Title 2,Template Content {key_first_collection_2},key_first_collection_2,2,Headline Key2,
+My Second Collection,Another description.,Template Title 3,Template Content {key_second_collection},key_second_collection,value 3,Headline Key3,

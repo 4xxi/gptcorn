@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Placeholder{% endblock %}
+
+{% block breadcrumbs %}
+    {% if collection is defined and collection %}
+        {% if isOwner is defined and isOwner %}
+            {% include 'default/_breadcrumbs.html.twig' with {
+                'items': [
+                    {'name': 'Collections', 'url': path('app_collection_index')},
+                    {'name': collection.title, 'url': path('app_collection_show', {'id': collection.id})},
+                    {'name': 'Edit: '~placeholder.key, 'url': '#'},
+                ]
+            } %}
+        {% else %}
+            {% include 'default/_breadcrumbs.html.twig' with {
+                'items': [
+                    {'name': 'Shared Collections', 'url': path('app_shared_collection_index')},
+                    {'name': collection.title, 'url': path('app_shared_collection_show', {'id': collection.id})},
+                    {'name': 'Edit: '~placeholder.key, 'url': '#'},
+                ]
+            } %}
+        {% endif %}
+    {% else %}
+        {% include 'default/_breadcrumbs.html.twig' with {
+            'items': [
+                {'name': 'Placeholders', 'url': path('app_placeholder_index')},
+                {'name': 'Edit: '~placeholder.key, 'url': '#'},
+            ]
+        } %}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% include 'components/_subheading.html.twig' with {'title': 'Edit Placeholder'} %}
+
+    <div class="max-w-xl mb-8">
+        {{ include('placeholder/_form.html.twig', {'button_label': 'Update'}) }}
+    </div>
+
+    {% include 'components/_divider_with_buttons.html.twig' with {
+        'edit': path('app_placeholder_edit', {'id': placeholder.id}),
+        'delete': {'path': path('app_placeholder_delete', {'id': placeholder.id}),'entity_id': placeholder.id},
+        'favorite': path('app_placeholder_favorite', {'id': placeholder.id}),
+        'object': placeholder,
+        'clone': path('app_placeholder_clone', {'id': placeholder.id}),
+    } %}
+
+    {% include 'components/_back_button.html.twig' with {'path': path('app_placeholder_index')} %}
+
+{% endblock %}

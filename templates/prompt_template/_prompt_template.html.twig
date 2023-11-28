@@ -1,0 +1,46 @@
+{% if is_owner is not defined %}{% set is_owner = true %}{% endif %}
+{% if can_write is not defined %}{% set can_write = prompt_template.getPermissions(app.user) == constant('App\\Entity\\EntityWithPermissionsInterface::WRITE_PERMISSION') %}{% endif %}
+
+{% set run_path = path('app_prompt_template_run', {'id': prompt_template.id}) %}
+{% if collectionId is defined and collectionId %} {% set run_path = path('app_prompt_template_in_collection_run', {'id': prompt_template.id, 'collectionId': collectionId}) %}{% endif %}
+
+<li class="col-span-1 flex rounded-md shadow-sm ">
+    <div
+        class="flex w-16 flex-shrink-0 items-center justify-center bg-primary rounded-l-md text-sm font-medium text-white">
+
+        <a href="{{ run_path }}">
+            <iconify-icon icon="codicon:run-all"
+                          class="text-2xl mt-1 shrink-0 text-white hover:text-slate-300"></iconify-icon>
+        </a>
+    </div>
+    <div
+        class="flex flex-1 items-center justify-between truncate rounded-r-md border-b border-r border-t border-gray-200 bg-white">
+        <div class="flex-1 truncate px-4 py-2 text-sm">
+            <a href="{{ path('app_prompt_template_show', {'id': prompt_template.id}) }}"
+               class="font-medium text-gray-900 hover:text-gray-600">{{ prompt_template.title }}</a>
+            <p class="text-gray-500">{{ prompt_template.createdAt|date('Y-m-d') }}</p>
+        </div>
+
+        <div class="flex flex-none pr-2 gap-x-2">
+            {% set favorite_path = is_owner ? path('app_prompt_template_favorite', {'id': prompt_template.id}) : null %}
+            {% set delete = is_owner ? {'path': path('app_prompt_template_delete', {'id': prompt_template.id}),'entity_id': prompt_template.id} : null %}
+
+            {% set edit_path = null %}
+            {% if can_write %}
+                {% set edit_path = path('app_prompt_template_edit', {'id': prompt_template.id}) %}
+                {% if collectionId is defined and collectionId %}
+                    {% set edit_path = path('app_prompt_template_in_collection_edit', {'id': prompt_template.id, 'collectionId': collectionId}) %}
+                {% endif %}
+            {% endif %}
+
+            {% include 'components/_inline_buttons.html.twig' with {
+                'object': prompt_template,
+                'favorite': favorite_path,
+                'edit': edit_path,
+                'clone': path('app_prompt_template_clone', {'id': prompt_template.id}),
+                'share': null,
+                'delete': delete,
+            } %}
+        </div>
+    </div>
+</li>

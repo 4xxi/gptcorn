@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Collection{% endblock %}
+
+{% block breadcrumbs %}
+    {% include 'default/_breadcrumbs.html.twig' with {
+        'items': [
+            {'name': 'Collections', 'url': path('app_collection_index')},
+            {'name': 'Import', 'url': '#'},
+        ]
+    } %}
+{% endblock %}
+
+{% block content %}
+    {% include 'components/_subheading.html.twig' with {'title': 'Import Collections'} %}
+
+    <div class="max-w-xl mb-8">
+        <div class="mt-8 bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-3" role="alert">
+            <p class="font-bold">Import Instructions</p>
+            <p class="text-sm">
+                For importing collections, you can either upload a file directly or provide a public link to a GitHub file. Currently, only JSON and CSV formats are supported. Please ensure your file follows the correct format.
+            </p>
+            <p class="text-sm mt-2">
+                Need help? <a href="{{ jsonExampleUrl }}" target="_blank" download class="text-blue-800 hover:text-blue-900 font-semibold">Download a JSON example</a> or <a href="{{ csvExampleUrl }}" target="_blank" download class="text-blue-800 hover:text-blue-900 font-semibold">Download a CSV example</a> to get started.
+            </p>
+        </div>
+        {{ include('collection/_form.html.twig') }}
+    </div>
+
+    {% include 'components/_back_button.html.twig' with {'path': path('app_collection_index')} %}
+{% endblock %}

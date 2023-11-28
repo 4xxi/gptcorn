@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New PromptTemplate{% endblock %}
+
+{% block breadcrumbs %}
+    {% include 'default/_breadcrumbs.html.twig' with {
+        'items': [
+            {'name': 'Prompt Templates', 'url': path('app_prompt_template_index')},
+            {'name': 'New', 'url': '#'},
+        ]
+    } %}
+{% endblock %}
+
+{% block content %}
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div class="max-w-xl mb-8">
+            {% include 'components/_subheading.html.twig' with {'title': 'Create Prompt Template'} %}
+            {{ include('prompt_template/_form.html.twig') }}
+        </div>
+        <div class="mb-8">
+            {% include 'components/_subheading.html.twig' with {'title': 'Available placeholders'} %}
+            {% include 'placeholder/_list.html.twig' with {'placeholders': placeholders} %}
+        </div>
+    </div>
+    {% include 'components/_back_button.html.twig' with {'path': path('app_prompt_template_index')} %}
+{% endblock %}

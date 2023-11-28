@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Category index{% endblock %}
+
+{% block breadcrumbs %}
+    {% include 'default/_breadcrumbs.html.twig' with {
+        'items': [
+            {'name': 'Placeholder Categories', 'url': '#' },
+        ]
+    } %}
+{% endblock %}
+
+{% block content %}
+    {% include 'components/_heading_with_button.html.twig' with {
+        'title': 'Placeholder Categories',
+        'buttons': [
+            {'url': path('app_category_new'), 'icon': 'clarity:plus-circle-line'},
+        ]
+    } %}
+
+    <div class="mb-4">
+        {% if categories|length > 0 %}
+            <ul role="list" class="divide-y divide-gray-100">
+                {% for category in categories %}
+                    {% include 'category/_category.html.twig' with {'category': category} %}
+                {% endfor %}
+            </ul>
+            <div class="navigation">
+                {{ knp_pagination_render(categories) }}
+            </div>
+        {% else %}
+            <a href="{{ path('app_category_new') }}"
+               class="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                <iconify-icon icon="bi:collection"
+                              class="mx-auto h-24 w-24 text-[80px] text-gray-400"></iconify-icon>
+                <span class="mt-2 block text-sm font-semibold text-gray-900">Create Your First Placeholder Category</span>
+            </a>
+        {% endif %}
+    </div>
+
+    {% if placeholders_without_category|length > 0 %}
+    <div class="mt-16 mb-4">
+        {% include 'components/_heading.html.twig' with {title: 'Placeholders without Category'} %}
+
+        <ul role="list" class="divide-y divide-gray-100">
+            {% for placeholder in placeholders_without_category %}
+                {% include 'placeholder/_placeholder.html.twig' with {
+                    'placeholder': placeholder,
+                    'show_categories': true,
+                } %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {% include 'components/_back_button.html.twig' with {'path': path('app_default'), 'label': 'Back to the Dashboard'} %}
+
+{% endblock %}

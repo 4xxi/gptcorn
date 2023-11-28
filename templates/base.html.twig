@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html class="h-full bg-white">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
+        <link rel="icon" type="image/x-icon" sizes="48x48" href="{{ asset('images/favicon-48x48.ico') }}">
+        <link rel="icon" type="image/x-icon" sizes="32x32" href="{{ asset('images/favicon-32x32.ico') }}">
+        <link rel="icon" type="image/x-icon" sizes="16x16" href="{{ asset('images/favicon-16x16.ico') }}">
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ importmap() }}
+    {% endblock %}
+    <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@ryangjchandler/alpine-clipboard@2.x.x/dist/alpine-clipboard.js"
+            defer></script>
+    <script src="//unpkg.com/alpinejs" defer></script>
+</head>
+<body class="h-full">
+{% block body %}
+    <div>
+        {% include 'default/_nav.html.twig' %}
+        <main class="pt-0 lg:pl-72">
+            <div class="px-4 sm:px-6 lg:px-8 pb-16">
+                {% block breadcrumbs %}
+                {% endblock %}
+                <div class="mt-10">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock %}
+</body>
+</html>

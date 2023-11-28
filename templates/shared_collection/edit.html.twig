@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Collection{% endblock %}
+
+{% block breadcrumbs %}
+    {% include 'default/_breadcrumbs.html.twig' with {
+        'items': [
+            {'name': 'Shared Collections', 'url': path('app_shared_collection_index')},
+            {'name': 'Edit: '~collection.title, 'url': '#'},
+        ]
+    } %}
+{% endblock %}
+
+{% block content %}
+    {% include 'components/_subheading.html.twig' with {'title': 'Edit Shared Collection'} %}
+
+    <div class="max-w-xl mb-8">
+        {{ include('collection/_form.html.twig', {'button_label': 'Update'}) }}
+    </div>
+
+    {% include 'components/_divider_with_buttons.html.twig' with {
+        'edit': path('app_shared_collection_edit', {'id': collection.id}),
+        'delete': {'path': path('app_collection_delete', {'id': collection.id}),'entity_id': collection.id},
+        'favorite': path('app_collection_favorite', {'id': collection.id}),
+        'object': collection,
+    } %}
+
+    {% include 'components/_back_button.html.twig' with {'path': path('app_shared_collection_index')} %}
+
+{% endblock %}

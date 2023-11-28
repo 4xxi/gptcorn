@@ -1,0 +1,103 @@
+version: "3.4"
+
+services:
+  php:
+    image: ${IMAGES_PREFIX:-}app-php
+    restart: unless-stopped
+    volumes:
+      - php_socket:/var/run/php
+    healthcheck:
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+    environment:
+      # TRUSTED_HOSTS: ^${SERVER_NAME:-example\.com|localhost|gptcorn.org}|caddy$$
+      # The two next lines can be removed after initial installation
+      SYMFONY_VERSION: ${SYMFONY_VERSION:-}
+      STABILITY: ${STABILITY:-stable}
+      # Run "composer require symfony/orm-pack" to install and configure Doctrine ORM
+    env_file:
+      - .env
+      - .env.local
+
+  caddy:
+    image: ${IMAGES_PREFIX:-}app-caddy
+    depends_on:
+      - php
+    environment:
+      SERVER_NAME: ${SERVER_NAME:-localhost}, caddy:80
+    env_file:
+      - .env
+      - .env.local
+    restart: unless-stopped
+    volumes:
+      - php_socket:/var/run/php
+      - caddy_data:/data
+      - caddy_config:/config
+    ports:
+      # HTTP
+      - target: 80
+        published: ${HTTP_PORT:-80}
+        protocol: tcp
+      # HTTPS
+      - target: 443
+        published: ${HTTPS_PORT:-443}
+        protocol: tcp
+      # HTTP/3
+      - target: 443
+        published: ${HTTP3_PORT:-443}
+        protocol: udp
+
+  # Mercure is installed as a Caddy module, prevent the Flex recipe from installing another service
+  ###> symfony/mercure-bundle ###
+  ###< symfony/mercure-bundle ###
+
+  ###> doctrine/doctrine-bundle ###
+  database:
+    image: postgres:${POSTGRES_VERSION:-15}-alpine
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+      - .env.local
+    volumes:
+      - database_data:/var/lib/postgresql/data:rw
+      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
+      # - ./docker/db/data:/var/lib/postgresql/data:rw
+  ###< doctrine/doctrine-bundle ###
+
+  minio:
+    image: minio/minio
+    volumes:
+      - minio_data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    env_file:
+      - .env
+      - .env.local
+    command: server /data --console-address ":9001"
+
+  minio_create_buckets:
+    image: minio/mc
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      sleep 5;
+      until (/usr/bin/mc config host add myminio ${MINIO_ENDPOINT} ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD}) do echo '...waiting...' && sleep 1; done;
+      /usr/bin/mc admin user svcacct add --access-key ${MINIO_ACCESS_KEY} --secret-key ${MINIO_SECRET_KEY} myminio ${MINIO_ROOT_USER};
+      /usr/bin/mc mb myminio/${MINIO_AVATAR_BUCKET_NAME};
+      /usr/bin/mc anonymous set private myminio/${MINIO_AVATAR_BUCKET_NAME};
+      /usr/bin/mc mb myminio/${MINIO_IMPORT_BUCKET_NAME};
+      /usr/bin/mc anonymous set private myminio/${MINIO_IMPORT_BUCKET_NAME};
+      exit 0;
+      "
+
+volumes:
+  php_socket:
+  caddy_data:
+  caddy_config:
+  minio_data:
+  database_data:

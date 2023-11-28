@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Placeholder{% endblock %}
+
+{% block breadcrumbs %}
+    {% include 'default/_breadcrumbs.html.twig' with {
+        'items': [
+            {'name': 'Placeholders', 'url': path('app_placeholder_index')},
+            {'name': placeholder.key, 'url': '#'},
+        ]
+    } %}
+{% endblock %}
+
+{% block content %}
+    <div class="px-4 py-6 sm:px-6">
+        <h3 class="text-base font-semibold leading-7 text-gray-900">View Placeholder</h3>
+        <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-500">{{ placeholder.key }}</p>
+    </div>
+    <div class="border-t border-gray-100 max-w-xl">
+        <dl class="divide-y divide-gray-100">
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-900">Key</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ placeholder.key }}</dd>
+            </div>
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-900">Headline</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ placeholder.headline }}</dd>
+            </div>
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-900">Description</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ placeholder.description }}</dd>
+            </div>
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-900">Value</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ placeholder.value }}</dd>
+            </div>
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-900">Created</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ placeholder.createdAt|date('Y/m/d H:i:s') }}</dd>
+            </div>
+        </dl>
+    </div>
+
+    {% if is_owner is not defined %}{% set is_owner = app.user == placeholder.user %}{% endif %}
+    {% if can_write is not defined %}{% set can_write = placeholder.getPermissions(app.user) == constant('App\\Entity\\EntityWithPermissionsInterface::WRITE_PERMISSION') %}{% endif %}
+    {% set favorite_path = is_owner ? path('app_placeholder_favorite', {'id': placeholder.id}) : null %}
+    {% set edit_path = can_write ? path('app_placeholder_edit', {'id': placeholder.id}) : null %}
+    {% set delete = can_write ? {'path': path('app_placeholder_delete', {'id': placeholder.id}),'entity_id': placeholder.id} : null %}
+
+    {% include 'components/_divider_with_buttons.html.twig' with {
+        'edit': edit_path,
+        'delete': delete,
+        'favorite': favorite_path,
+        'object': placeholder,
+        'clone': path('app_placeholder_clone', {'id': placeholder.id}),
+    } %}
+
+    {% include 'components/_back_button.html.twig' with {'path': path('app_placeholder_index')} %}
+
+{% endblock %}

@@ -1,0 +1,44 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+parameters:
+    avatar_max_file_size: '%env(AVATAR_MAX_FILE_SIZE)%'
+    collection_import_csv_example_path: '%env(COLLECTION_IMPORT_CSV_EXAMPLE_PATH)%'
+    collection_import_json_example_path: '%env(COLLECTION_IMPORT_JSON_EXAMPLE_PATH)%'
+    collection_import_max_file_size: '%env(COLLECTION_IMPORT_MAX_FILE_SIZE)%'
+    knp_paginator_default_limit: '%env(KNP_PAGINATOR_DEFAULT_LIMIT)%'
+    minio_avatar_bucket_name: '%env(MINIO_AVATAR_BUCKET_NAME)%'
+    minio_import_bucket_name: '%env(MINIO_IMPORT_BUCKET_NAME)%'
+    openai_api_key: '%env(OPENAI_API_KEY)%'
+    openai_model: '%env(OPENAI_MODEL)%'
+    oauth_success_redirect_url: '%env(OAUTH_SUCCESS_REDIRECT_URL)%'
+    oauth_fail_redirect_url: '%env(OAUTH_FAIL_REDIRECT_URL)%'
+    sign_up_restricted_domains_list: '%env(SIGN_UP_RESTRICTED_DOMAINS_LIST)%'
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+    Aws\S3\S3Client:
+        arguments:
+            -
+                version: 'latest'
+                region: '%env(MINIO_REGION)%'
+                endpoint: '%env(MINIO_ENDPOINT)%'
+                use_path_style_endpoint: true
+                credentials:
+                    key: '%env(MINIO_ACCESS_KEY)%'
+                    secret: '%env(MINIO_SECRET_KEY)%'

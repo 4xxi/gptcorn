@@ -1,0 +1,22 @@
+{
+  "collections": [
+    {
+      "title": "Github test import",
+      "description": "Description",
+      "promptTemplates": [
+        {
+          "title": "Tell a joke",
+          "content": "Tell a joke about {github_service_name}"
+        }
+      ],
+      "placeholders": [
+        {
+          "key": "github_service_name",
+          "value": "GitHub",
+          "headline": "Github service name",
+          "description": "Some placeholder description"
+        }
+      ]
+    }
+  ]
+}

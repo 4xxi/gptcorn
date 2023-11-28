@@ -1,0 +1,49 @@
+{% if prompt_length is not defined %}
+    {% set prompt_length = 100 %}
+{% endif %}
+<li class="flex items-center justify-between gap-x-6 py-5 w-full">
+    <a href="{{ path('app_prompt_show', {'id': prompt.id}) }}" class="flex gap-x-2 w-full">
+        <div class="flex-none rounded-full p-1 my-4 h-4
+                    {% if prompt.completed %}text-green-600 bg-green-600/10
+                    {% elseif prompt.failed %}text-red-600 bg-red-600/10
+                    {% elseif prompt.inProgress %}text-indigo-600 bg-indigo-600/10
+                    {% else %}text-gray-500 bg-gray-500/10
+                    {% endif %}
+                ">
+            <div class="h-2 w-2 rounded-full bg-current"></div>
+        </div>
+        <div class="min-w-0">
+            <div class="flex items-center gap-x-2">
+                <p class="text-sm font-semibold leading-6 text-gray-900">Run #{{ prompt.id~'.' }}
+                    {{ prompt.titleOrPieceOfContent(prompt_length) }}</p>
+                    {% if false %}
+                        <p class="rounded-md whitespace-nowrap mt-0.5 px-1.5 py-0.5 text-xs font-medium bg-gray-50 px-2 py-1 text-primary ring-1 ring-inset ring-primary/20">
+                            {{ prompt.status }}</p>
+                    {% endif %}
+            </div>
+            <div class="mt-1 flex items-center gap-x-2 text-xs leading-5 text-gray-500 max-h-4">
+                <p class="truncate">Created
+                    <time datetime="{{ prompt.createdAt|date }}">{{ prompt.createdAt|time_diff }}</time>
+                </p>
+                    <p class="rounded-md whitespace-nowrap mt-0.5 px-1.5 py-0.5 text-xs font-medium bg-gray-50 px-2 py-1
+                    {% if prompt.completed %}text-green-600 bg-green-600/10
+                    {% elseif prompt.failed %}text-red-600 bg-red-600/10
+                    {% elseif prompt.inProgress %}text-indigo-600 bg-indigo-600/10
+                    {% else %}text-gray-500 bg-gray-500/10
+                    {% endif %}
+                 ring-1 ring-inset ring-primary/20">{{ prompt.statusText }}</p>
+            </div>
+        </div>
+        <div class="flex flex-none items-center gap-x-2">
+            {% include 'components/_inline_buttons.html.twig' with {
+                'object': prompt,
+                'favorite': null,
+                'edit': path('app_prompt_edit', {'id': prompt.id}),
+                'clone': path('app_prompt_clone', {'id': prompt.id}),
+                'share': null,
+                'delete': {'path': path('app_prompt_delete', {'id': prompt.id}),'entity_id': prompt.id},
+                'run': path('app_prompt_run', {'id': prompt.id}),
+            } %}
+        </div>
+    </a>
+</li>

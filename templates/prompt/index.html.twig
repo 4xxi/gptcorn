@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Prompt index{% endblock %}
+
+{% block breadcrumbs %}
+    {% include 'default/_breadcrumbs.html.twig' with {
+        'items': [
+            {'name': 'Prompt Runs', 'url': '#'},
+        ]
+    } %}
+{% endblock %}
+
+{% block content %}
+
+    {% include 'components/_heading_with_button.html.twig' with {
+        'title': 'Prompt Runs',
+        'buttons': [
+            {'url': path('app_prompt_new'), 'icon': 'clarity:plus-circle-line'},
+        ]
+    } %}
+
+    <div class="mb-4">
+        {% if prompts|length > 0 %}
+            <ul role="list" class="divide-y divide-gray-100">
+                {% for prompt in prompts %}
+                    {{ include('prompt/_prompt.html.twig', {'prompt': prompt}) }}
+                {% endfor %}
+            </ul>
+            <div class="navigation">
+                {{ knp_pagination_render(prompts) }}
+            </div>
+        {% else %}
+            <a href="{{ path('app_prompt_new') }}"
+               class="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                <iconify-icon icon="bi:collection"
+                              class="mx-auto h-24 w-24 text-[80px] text-gray-400"></iconify-icon>
+                <span class="mt-2 block text-sm font-semibold text-gray-900">Create Your First Prompt</span>
+            </a>
+        {% endif %}
+    </div>
+
+    {% include 'components/_back_button.html.twig' with {'path': path('app_default'), 'label': 'Back to the Dashboard'} %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {% if prompts|length > 0 %}
+        {{ parent() }}
+        {% include 'js/_prompt_updated_listener.html.twig' with {'prompts': prompts} %}
+    {% endif %}
+{% endblock %}

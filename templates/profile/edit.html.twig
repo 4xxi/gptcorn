@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Prompt{% endblock %}
+
+{% block breadcrumbs %}
+    {% include 'default/_breadcrumbs.html.twig' with {
+        'items': [
+            {'name': 'Profile', 'url': path('app_user_profile_show')},
+            {'name': 'Edit: '~user.email, 'url': '#'},
+        ]
+    } %}
+{% endblock %}
+
+{% block content %}
+    <h1>Edit Profile</h1>
+
+    <div class="max-w-xl">
+        {{ include('profile/_form.html.twig', {'button_label': 'Update'}) }}
+    </div>
+
+    {% include 'components/_divider_with_buttons.html.twig' with {
+        'edit': path('app_user_profile_show_edit', {'id': user.id}),
+    } %}
+
+    {% include 'components/_back_button.html.twig' with {'path': path('app_default'), 'label': 'Back to the Dashboard'} %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% include 'js/_plain_password_toggle.html.twig' with {'passwordInputId': 'user_profile_plainPassword', 'iconId': 'toggle_password_icon'} %}
+{% endblock %}

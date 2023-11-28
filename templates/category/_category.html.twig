@@ -1,0 +1,24 @@
+<li class="flex items-center justify-between gap-x-6 py-5 w-full">
+    <a href="{{ path('app_category_show', {'id': category.id}) }}" class="flex gap-x-2 w-full">
+        <div class="min-w-0">
+            <div class="flex items-start gap-x-3">
+                <p class="text-sm font-semibold leading-6 text-gray-900">{{ category.title }}</p>
+            </div>
+            <div class="mt-1 flex items-center gap-x-2 text-xs leading-5 text-gray-500">
+                <p class="truncate">Created
+                    <time datetime="{{ category.createdAt|date }}">{{ category.createdAt|time_diff }}</time>
+                </p>
+            </div>
+        </div>
+        <div class="flex flex-none items-center gap-x-2">
+            {% include 'components/_inline_buttons.html.twig' with {
+                'object': category,
+                'edit': path('app_category_edit', {'id': category.id}),
+                'favorite': null,
+                'clone': null,
+                'share': null,
+                'delete': {'path': path('app_category_delete', {'id': category.id}),'entity_id': category.id},
+            } %}
+        </div>
+    </a>
+</li>

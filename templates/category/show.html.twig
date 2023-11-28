@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Category{% endblock %}
+
+{% block breadcrumbs %}
+    {% include 'default/_breadcrumbs.html.twig' with {
+        'items': [
+            {'name': 'Placeholder Categories', 'url': path('app_category_index')},
+            {'name': category.title, 'url': path('app_category_show', {'id': category.id})},
+        ]
+    } %}
+{% endblock %}
+
+{% block content %}
+    <div class="px-4 py-6 sm:px-6">
+        <h3 class="text-base font-semibold leading-7 text-gray-900">View Category</h3>
+    </div>
+    <div class="border-t border-gray-100 max-w-xl">
+        <dl class="divide-y divide-gray-100">
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-900">Title</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ category.title }}</dd>
+            </div>
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-900">Created</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ category.createdAt|date('Y/m/d H:i:s') }}</dd>
+            </div>
+        </dl>
+    </div>
+
+    {% include 'components/_divider_with_buttons.html.twig' with {
+        'edit': path('app_category_edit', {'id': category.id}),
+        'delete': {'path': path('app_category_delete', {'id': category.id}),'entity_id': category.id},
+        'object': category,
+    } %}
+
+    <div class="mt-16 mb-8">
+        {% include 'components/_heading_with_button.html.twig' with {
+            'title': 'Placeholders',
+            'buttons': [
+                {'url': path('app_placeholder_new_with_category', {'id': category.id}), 'icon': 'clarity:plus-circle-line'},
+            ]
+        } %}
+
+        <ul role="list" class="divide-y divide-gray-100">
+            {% for placeholder in placeholders %}
+                {% include 'placeholder/_placeholder.html.twig' with {
+                    'placeholder': placeholder,
+                    'show_categories': true,
+                } %}
+            {% endfor %}
+        </ul>
+    </div>
+
+    {% include 'components/_back_button.html.twig' with {'path': path('app_category_index')} %}
+{% endblock %}

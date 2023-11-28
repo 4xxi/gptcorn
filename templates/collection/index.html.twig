@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Collection index{% endblock %}
+
+{% block breadcrumbs %}
+    {% include 'default/_breadcrumbs.html.twig' with {
+        'items': [
+            {'name': 'Collections', 'url': '#' },
+        ]
+    } %}
+{% endblock %}
+
+{% block content %}
+    {% include 'components/_heading_with_button.html.twig' with {
+        'title': 'Collections',
+        'buttons': [
+            {'button_text': 'Import', 'url': path('app_collection_import'), 'icon': 'clarity:import-line'},
+            {'url': path('app_collection_new'), 'icon': 'clarity:plus-circle-line'},
+        ]
+    } %}
+
+    <div class="mb-4">
+        {% if collections|length > 0 %}
+            <ul role="list" class="divide-y divide-gray-100">
+                {% for collection in collections %}
+                    {% include 'collection/_collection.html.twig' with {'collection': collection} %}
+                {% endfor %}
+            </ul>
+            <div class="navigation">
+                {{ knp_pagination_render(collections) }}
+            </div>
+        {% else %}
+            <a href="{{ path('app_collection_new') }}"
+               class="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                <iconify-icon icon="bi:collection"
+                              class="mx-auto h-24 w-24 text-[80px] text-gray-400"></iconify-icon>
+                <span class="mt-2 block text-sm font-semibold text-gray-900">Create Your First Collection</span>
+            </a>
+        {% endif %}
+    </div>
+
+    {% include 'components/_back_button.html.twig' with {'path': path('app_default'), 'label': 'Back to the Dashboard'} %}
+
+{% endblock %}

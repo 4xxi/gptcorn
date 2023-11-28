@@ -1,0 +1,17 @@
+{{ form_start(form) }}
+<div class="mb-4">
+    {{ form_label(form.title) }}
+    {{ form_widget(form.title, {'attr': {'class': 'form-input'}}) }}
+    {{ form_errors(form.title) }}
+</div>
+<div class="mb-4">
+    {{ form_label(form.content) }}
+    {{ form_widget(form.content, {'attr': {'class': 'form-textarea', 'rows': 15}}) }}
+    {{ form_errors(form.content) }}
+</div>
+<div class="flex space-x-2">
+    {{ form_widget(form.Save) }}
+    {{ form_widget(form.Run) }}
+</div>
+<div id="loader" class="border-4 border-t-4 border-gray-200 h-7 w-7 rounded-full animate-spin opacity-0"></div>
+{{ form_end(form) }}

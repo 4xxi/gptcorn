@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Prompt{% endblock %}
+
+{% block breadcrumbs %}
+    {% include 'default/_breadcrumbs.html.twig' with {
+        'items': [
+            {'name': 'Prompt Runs', 'url': path('app_prompt_index')},
+            {'name': 'Edit: '~prompt.title, 'url': '#'},
+        ]
+    } %}
+{% endblock %}
+
+{% block content %}
+    <h1>Edit Prompt</h1>
+
+    {{ include('prompt/_form.html.twig', {'button_label': 'Update'}) }}
+
+    {% include 'components/_divider_with_buttons.html.twig' with {
+        'run': path('app_prompt_run', {'id': prompt.id}),
+        'edit': path('app_prompt_edit', {'id': prompt.id}),
+        'delete': {'path': path('app_prompt_delete', {'id': prompt.id}),'entity_id': prompt.id},
+        'clone': path('app_prompt_clone', {'id': prompt.id}),
+    } %}
+
+    {% include 'components/_back_button.html.twig' with {'path': path('app_prompt_index')} %}
+
+{% endblock %}

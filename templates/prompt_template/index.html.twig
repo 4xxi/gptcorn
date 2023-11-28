@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}PromptTemplate index{% endblock %}
+
+{% block breadcrumbs %}
+    {% include 'default/_breadcrumbs.html.twig' with {
+        'items': [
+            {'name': 'Prompt Templates', 'url': '#'},
+        ]
+    } %}
+{% endblock %}
+
+{% block content %}
+
+    {% include 'components/_heading_with_button.html.twig' with {
+        'title': 'Prompt Templates',
+        'buttons': [
+            {'url': path('app_prompt_template_new'), 'icon': 'clarity:plus-circle-line'},
+        ]
+    } %}
+
+    <div class="mb-8">
+        {% if prompt_templates|length > 0 %}
+            <ul role="list" class="mt-3 grid grid-cols-1 gap-5 md:grid-cols-2 sm:gap-6 xl:grid-cols-2 pb-4">
+                {% for prompt_template in prompt_templates %}
+                    {% include 'prompt_template/_prompt_template.html.twig' with {'prompt_template': prompt_template} %}
+                {% endfor %}
+            </ul>
+            <div class="navigation">
+                {{ knp_pagination_render(prompt_templates) }}
+            </div>
+        {% else %}
+            <a href="{{ path('app_prompt_template_new') }}"
+               class="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                <iconify-icon icon="bi:collection"
+                              class="mx-auto h-24 w-24 text-[80px] text-gray-400"></iconify-icon>
+                <span class="mt-2 block text-sm font-semibold text-gray-900">Create Your First Prompt Template</span>
+            </a>
+        {% endif %}
+    </div>
+
+    {% include 'components/_back_button.html.twig' with {'path': path('app_default'), 'label': 'Back to the Dashboard'} %}
+
+
+{% endblock %}

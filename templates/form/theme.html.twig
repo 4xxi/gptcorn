@@ -1,0 +1,48 @@
+{% use 'tailwind_2_layout.html.twig' %}
+
+{%- block submit_widget -%}
+    {%- set attr = attr|merge({class: (attr.class|default('mt-8 block inline-flex items-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary'))|trim}) -%}
+    {{- parent() -}}
+{%- endblock submit_widget %}
+
+{%- block widget_attributes -%}
+    {%- set widget_class = widget_class|default('mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50') -%}
+    {%- set widget_disabled_class = widget_disabled_class|default('my disabled widget classes') -%}
+    {%- set widget_errors_class = widget_errors_class|default('my widget with error classes') -%}
+    {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' ' ~ widget_class)|trim}) -%}
+    {{- parent() -}}
+{%- endblock widget_attributes -%}
+
+{% block form_label %}
+    {% if required %}
+        {% set label_class = label_class|default('block font-semibold text-gray-600') %}
+        <div class="flex items-center mt-8">
+            {{ parent() }}
+            <span class="ml-1 text-red-500">*</span>
+        </div>
+    {% else %}
+        {% set label_class = label_class|default('mt-8 block font-semibold text-gray-600') %}
+        {{ parent() }}
+    {% endif %}
+{% endblock form_label %}
+
+{%- block form_help -%}
+    {%- set help_attr = help_attr|merge({ class: help_attr.class|default(help_class|default('mt-1 mb-4 text-gray-500 text-sm')) }) -%}
+    {{- parent() -}}
+{%- endblock form_help -%}
+
+{%- block checkbox_row -%}
+    {%- set row_attr = row_attr|merge({ class: row_attr.class|default(row_class|default('mb-6')) }) -%}
+    {%- set widget_attr = {} -%}
+    {%- if help is not empty -%}
+        {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
+    {%- endif -%}
+    <div{% with {attr: row_attr} %}{{ block('attributes') }}{% endwith %}>
+        {{- form_errors(form) -}}
+        <div class="inline-flex items-center w-full">
+            {{- form_widget(form, widget_attr) -}}
+            {{- form_label(form, null, {'label_attr': {'class': 'px-2'}}) -}}
+        </div>
+        {{- form_help(form) -}}
+    </div>
+{%- endblock checkbox_row -%}

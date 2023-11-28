@@ -1,0 +1,137 @@
+{% set route_name = app.request.attributes.get('_route') %}
+{% set id = app.request.attributes.get('id', 0) %}
+{% set category_active_class = 'text-primary hover:text-gray-700 bg-gray-50' %}
+{% set category_inactive_class = 'text-gray-700 hover:text-primary hover:bg-gray-50' %}
+<div class="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+    <div class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6">
+        <div class="flex h-16 shrink-0 items-center">
+            <a href="{{ path('app_default') }}">
+                <img class="h-14 w-auto" src="{{ asset('images/logo.svg') }}" alt="GPTCORN">
+            </a>
+        </div>
+        <nav class="flex flex-1 flex-col">
+            <ul role="list" class="flex flex-1 flex-col gap-y-7">
+                <li>
+                    <ul role="list" class="-mx-2 space-y-1">
+                        <li>
+                            <!-- Current: "bg-gray-50 text-indigo-600", Default: "text-gray-700 hover:text-indigo-600 hover:bg-gray-50" -->
+                            <a href="{{ path('app_default') }}"
+                               class="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold {% if route_name == 'app_default' %}{{ category_active_class }}{% else %}{{ category_inactive_class }}{% endif %}">
+                                <iconify-icon icon="material-symbols:home"
+                                              class="text-2xl shrink-0"></iconify-icon>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('app_prompt_template_index') }}"
+                               class="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold {% if route_name in ['app_prompt_template_index', 'app_prompt_template_show', 'app_prompt_template_edit', 'app_prompt_template_in_collection_edit'] %}{{ category_active_class }}{% else %}{{ category_inactive_class }}{% endif %}">
+                                <iconify-icon icon="codicon:run-all"
+                                              class="text-2xl shrink-0 hover:text-primary"></iconify-icon>
+                                Prompt Templates
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('app_collection_index') }}"
+                               class="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold {% if route_name in ['app_collection_index', 'app_collection_show', 'app_collection_edit', 'app_collection_share', 'app_collection_edit_share_permissions'] %}{{ category_active_class }}{% else %}{{ category_inactive_class }}{% endif %}">
+                                <iconify-icon icon="bi:collection"
+                                              class="text-2xl shrink-0 hover:text-primary"></iconify-icon>
+                                Collections
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('app_shared_collection_index') }}"
+                               class="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold {% if route_name in ['app_shared_collection_index', 'app_shared_collection_show', 'app_shared_collection_edit', 'app_shared_collection_edit_permissions', 'app_shared_collection_share'] %}{{ category_active_class }}{% else %}{{ category_inactive_class }}{% endif %}">
+                                <iconify-icon icon="clarity:share-line"
+                                              class="text-2xl shrink-0 hover:text-primary"></iconify-icon>
+                                Shared Collections
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('app_prompt_index') }}"
+                               class="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold {% if route_name in ['app_prompt_index', 'app_prompt_show', 'app_prompt_edit', 'app_prompt_template_run', 'app_prompt_run', 'app_prompt_template_in_collection_run'] %}{{ category_active_class }}{% else %}{{ category_inactive_class }}{% endif %}">
+                                <iconify-icon icon="material-symbols:history"
+                                              class="text-2xl shrink-0 hover:text-primary"></iconify-icon>
+                                Prompt Runs
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('app_placeholder_index') }}"
+                               class="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold {% if route_name in ['app_placeholder_index', 'app_placeholder_show', 'app_placeholder_edit', 'app_placeholder_in_collection_edit'] %}{{ category_active_class }}{% else %}{{ category_inactive_class }}{% endif %}">
+                                <iconify-icon icon="material-symbols:tag"
+                                              class="text-2xl shrink-0 hover:text-primary"></iconify-icon>
+                                Placeholders
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('app_category_index') }}"
+                               class="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold {% if route_name in ['app_category_index', 'app_category_show', 'app_category_edit'] %}{{ category_active_class }}{% else %}{{ category_inactive_class }}{% endif %}">
+                                <iconify-icon icon="clarity:tags-line"
+                                              class="text-2xl shrink-0 hover:text-primary"></iconify-icon>
+                                Placeholder Categories
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                {% if helper.favoritePromptTemplates is not empty %}
+                    <li>
+                        <div class="text-xs font-semibold leading-6 text-gray-400">
+                            Run Favorite Prompt Templates
+                        </div>
+                        <ul role="list" class="-mx-2 mt-2 space-y-1">
+                            {% for promptTemplate in helper.favoritePromptTemplates %}
+                                <li>
+                                    <!-- Current: "bg-gray-50 text-indigo-600", Default: "text-gray-700 hover:text-indigo-600 hover:bg-gray-50" -->
+                                    <a href="{{ path('app_prompt_template_run', {'id': promptTemplate.id}) }}"
+                                       class="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold {% if (route_name == 'app_prompt_template_run') and (id == promptTemplate.id) %}{{ category_active_class }}{% else %}{{ category_inactive_class }}{% endif %}">
+                                    <span
+                                        class="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium {% if (route_name == 'app_prompt_template_run') and (id == promptTemplate.id) %}{{ category_active_class }} text-primary border-primary group-hover:border-gray-200 group-hover:text-gray-700 {% else %}{{ category_inactive_class }} border-gray-200 group-hover:border-primary group-hover:text-primary{% endif %}">
+                                        <iconify-icon icon="clarity:play-line"></iconify-icon></span>
+                                        <span class="truncate">{{ promptTemplate.title }}</span>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endif %}
+                {% if helper.favoriteCollections is not empty %}
+                <li>
+                    <div class="text-xs font-semibold leading-6 text-gray-400">
+                        Favorite Collections
+                    </div>
+                    <ul role="list" class="-mx-2 mt-2 space-y-1">
+                        {% for collection in helper.favoriteCollections %}
+                            <li>
+                                <!-- Current: "bg-gray-50 text-indigo-600", Default: "text-gray-700 hover:text-indigo-600 hover:bg-gray-50" -->
+                                <a href="{{ path('app_collection_show', {'id': collection.id}) }}"
+                                   class="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold {% if (route_name == 'app_collection_show') and (id == collection.id) %}{{ category_active_class }}{% else %}{{ category_inactive_class }}{% endif %}">
+                                    <span
+                                        class="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium {% if (route_name == 'app_collection_show') and (id == collection.id) %}{{ category_active_class }} text-primary border-primary group-hover:border-gray-200 group-hover:text-gray-700 {% else %}{{ category_inactive_class }} border-gray-200 group-hover:border-primary group-hover:text-primary{% endif %}">#</span>
+                                        <span class="truncate">{{ collection.title }}</span>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                </li>
+                {% endif %}
+                <li class="-mx-6 mt-auto">
+                    <hr class="mb-3">
+                    <div class="py-3">
+                        <div class="flex items-center gap-x-4 px-6 hover:bg-gray-50">
+                            <a href="{{ path('app_user_profile_show') }}" class="flex items-center gap-x-4 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50">
+                                {% if app.user.avatar %}
+                                    <img class="h-8 w-8 rounded-full bg-gray-50" src="{{ path('app_user_show_avatar') }}" alt="{{ app.user.name }}">
+                                {% else %}
+                                    <img class="h-8 w-8 rounded-full bg-gray-50" src="{{ asset('images/avatar.svg') }}" alt="{{ app.user.name }}">
+                                {% endif %}
+                                <span>{{ app.user.name }}</span>
+                            </a>
+                            <a href="{{ path('app_logout') }}" class="ml-auto">
+                                <iconify-icon icon="mdi:logout" class="relative text-xl inline-flex items-center rounded-md bg-white px-3 py-2 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"></iconify-icon>
+                            </a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>

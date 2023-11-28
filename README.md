@@ -28,7 +28,8 @@ prompts via OpenAI models, fostering both individual creativity and collaborativ
 - Google OAuth2 for Easy Sign-Up: Get started quickly and securely with Google sign-in.
 - Integration with OpenAI Models: Run your prompts through various OpenAI models, leveraging the power of advanced AI.
 
-For a detailed overview of GPTCorn's features, including screencasts and screenshots, visit our [official website](https://gptcorn.ai).
+For a detailed overview of GPTCorn's features, including screencasts and screenshots, visit
+our [official website](https://gptcorn.ai).
 
 ## Installation Instructions
 
@@ -36,12 +37,50 @@ For a detailed overview of GPTCorn's features, including screencasts and screens
    `git clone git@github.com:4xxi/gptcorn.git`
 
 2. Set Up Your Environment:
-    - Make a local copy of the `.env` file and adjust it as needed.
+    - Make a local copy of the `.env` file and set OPENAI_API_KEY.
     - Start the Docker containers using `docker compose up -d`.
 
 3. Prepare the Application:
     - Build the CSS with `php bin/console tailwind:build`.
     - Compile the assets using `php bin/console asset-map:compile`.
+
+### Xdebug
+
+To enable Xdebug for more effective debugging, set the following environment variables:
+
+```shell
+XDEBUG_MODE=debug
+XDEBUG_SESSION=1
+PHP_IDE_CONFIG="serverName=localhost"
+```
+
+### Creating the First User
+
+To create the first user, execute the following console command:
+
+```shell
+bin/console app:user:create --email=<email> --password=<password> --admin
+```
+
+Note: Use `--admin` to grant admin privileges to the user.
+
+### Admin Panel
+
+Access the admin panel at: `https://localhost/admin`
+
+### Google OAuth Setup
+
+To enable Google OAuth, update these environment variables:
+
+```shell
+OAUTH_GOOGLE_CLIENT_ID
+OAUTH_GOOGLE_CLIENT_SECRET
+```
+
+### OpenAI API Key and Model Configuration
+
+1. Set your OpenAI API Key in the environment variable `OPENAI_API_KEY`.
+2. To change the OpenAI model, update the `OPENAI_MODEL` environment variable.
 
 ## Contributing
 

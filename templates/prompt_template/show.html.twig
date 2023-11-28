@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}PromptTemplate{% endblock %}
+
+{% block breadcrumbs %}
+    {% include 'default/_breadcrumbs.html.twig' with {
+        'items': [
+            {'name': 'Prompt Templates', 'url': path('app_prompt_template_index')},
+            {'name': prompt_template.title, 'url': '#'},
+        ]
+    } %}
+{% endblock %}
+
+{% block content %}
+
+    <div class="px-4 py-6 sm:px-6">
+        <h3 class="text-base font-semibold leading-7 text-gray-900">View Prompt Template</h3>
+    </div>
+    <div class="border-t border-gray-100 max-w-xl">
+        <dl class="divide-y divide-gray-100">
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-900">Title</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ prompt_template.title }}</dd>
+            </div>
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-900">Content</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ prompt_template.content|nl2br }}</dd>
+            </div>
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-900">Created</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ prompt_template.createdAt|date('Y/m/d H:i:s') }}</dd>
+            </div>
+        </dl>
+    </div>
+
+    {% if is_owner is not defined %}{% set is_owner = app.user == prompt_template.user %}{% endif %}
+    {% if can_write is not defined %}{% set can_write = prompt_template.getPermissions(app.user) == constant('App\\Entity\\EntityWithPermissionsInterface::WRITE_PERMISSION') %}{% endif %}
+    {% set favorite_path = is_owner ? path('app_prompt_template_favorite', {'id': prompt_template.id}) : null %}
+    {% set edit_path = can_write ? path('app_prompt_template_edit', {'id': prompt_template.id}) : null %}
+    {% set delete = can_write ? {'path': path('app_prompt_template_delete', {'id': prompt_template.id}),'entity_id': prompt_template.id} : null %}
+
+    {% include 'components/_divider_with_buttons.html.twig' with {
+        'run': path('app_prompt_template_run', {'id': prompt_template.id}),
+        'edit': edit_path,
+        'delete': delete,
+        'favorite': favorite_path,
+        'object': prompt_template,
+        'clone': path('app_prompt_template_clone', {'id': prompt_template.id}),
+    } %}
+    {% include 'components/_back_button.html.twig' with {'path': path('app_prompt_template_index')} %}
+
+{% endblock %}

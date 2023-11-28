@@ -1,0 +1,45 @@
+{% if favorite is defined and favorite %}
+    <a href="{{ favorite }}"
+       class="">
+        <iconify-icon
+            icon="{% if object.favorite %}material-symbols:star{% else %}material-symbols:star-outline{% endif %}"
+            class="text-2xl mt-2 shrink-0 text-gray-500 hover:text-primary"></iconify-icon>
+    </a>
+{% endif %}
+
+{% if edit is defined and edit %}
+    <a href="{{ edit }}" class="">
+        <iconify-icon icon="material-symbols:edit-outline"
+                      class="text-2xl mt-2 shrink-0 text-gray-500 hover:text-primary"></iconify-icon>
+    </a>
+{% endif %}
+
+{% if run is defined and run %}
+    <a href="{{ run }}" class="">
+        <iconify-icon
+            icon="clarity:play-line"
+            class="text-2xl mt-2 shrink-0 text-gray-500 hover:text-primary"></iconify-icon>
+    </a>
+{% endif %}
+
+{% if clone is defined and clone %}
+    <a href="{{ clone }}"
+       onclick="return confirm('Are you sure you want to clone this item?');" class="">
+        <iconify-icon icon="clarity:clone-line"
+                      class="text-2xl mt-2 shrink-0 text-gray-500 hover:text-primary"></iconify-icon>
+    </a>
+{% endif %}
+
+{% if share is defined and share %}
+    <a href="{{ share }}" class="">
+        <iconify-icon icon="clarity:share-line"
+                      class="text-2xl mt-2 shrink-0 text-gray-500 hover:text-primary"></iconify-icon>
+    </a>
+{% endif %}
+
+{% if delete is defined and delete %}
+    {% include 'components/_delete_form.html.twig' with {
+        'icon_style': 'text-2xl mt-2 shrink-0 text-gray-500 hover:text-primary',
+        'delete': delete,
+    } %}
+{% endif %}

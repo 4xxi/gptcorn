@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Collection{% endblock %}
+
+{% block breadcrumbs %}
+    {% include 'default/_breadcrumbs.html.twig' with {
+        'items': [
+            {'name': 'Shared Collections', 'url': path('app_shared_collection_index')},
+            {'name': collection.title, 'url': '#'},
+        ]
+    } %}
+{% endblock %}
+
+{% block content %}
+
+    <div class="py-6">
+        <h1 class="text-2xl font-semibold leading-7 text-gray-900">{{ collection.title }}</h1>
+        <hr>
+        <div class="mt-4 max-w-2xl text-sm leading-6 text-gray-500">
+            {% if collection.description is not empty %}
+                {{ collection.description }} (created
+                <time datetime="{{ collection.createdAt|date }}">{{ collection.createdAt|time_diff }}</time>)
+            {% else %}
+                Created
+                <time datetime="{{ collection.createdAt|date }}">{{ collection.createdAt|time_diff }}</time>
+
+            {% endif %}
+
+        </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-24 mb-8">
+        <div>
+            {% include 'components/_subheading.html.twig' with {'title': 'Prompt Templates'} %}
+            <ul role="list" class="mt-8 grid grid-cols-1 gap-4 sm:gap-4">
+                {% for prompt_template in collection.promptTemplates %}
+                    {% include 'prompt_template/_prompt_template.html.twig' with {
+                        'prompt_template': prompt_template,
+                        'is_owner': is_owner,
+                        'can_write': can_write,
+                        'collectionId': collection.id,
+                    } %}
+                {% endfor %}
+            </ul>
+        </div>
+        <div>
+            {% include 'components/_subheading.html.twig' with {'title': 'Placeholders'} %}
+            <ul role="list" class="mt-3 divide-y divide-gray-100">
+                {% for placeholder in collection.placeholders %}
+                    {% include 'placeholder/_placeholder.html.twig' with {
+                        'placeholder': placeholder,
+                        'is_owner': is_owner,
+                        'can_write': can_write,
+                        'show_categories': false,
+                        'collectionId': collection.id,
+                    } %}
+                {% endfor %}
+            </ul>
+        </div>
+
+    </div>
+
+    {% if shared_collections|length > 0 %}
+        <div class="grid mt-12">
+            {% include 'components/_subheading.html.twig' with {'title': 'Shared to'} %}
+            {{ include('shared_collection/_manage_shared_collection.html.twig') }}
+        </div>
+    {% endif %}
+
+    {% if can_write %}
+        {% set favorite_path = is_owner ? path('app_collection_favorite', {'id': collection.id}) : null %}
+        {% set delete_path = is_owner ? {'path': path('app_collection_delete', {'id': collection.id}),'entity_id': collection.id} : null %}
+
+        {% include 'components/_divider_with_buttons.html.twig' with {
+            'edit': path('app_shared_collection_edit', {'id': collection.id}),
+            'delete': delete_path,
+            'favorite': favorite_path,
+            'share': path('app_shared_collection_share', {'id': collection.id}),
+            'object': collection,
+        } %}
+    {% endif %}
+
+    {% include 'components/_back_button.html.twig' with {'path': path('app_shared_collection_index')} %}
+
+{% endblock %}

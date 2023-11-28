@@ -1,0 +1,10 @@
+{% if confirm_message is not defined %}{% set confirm_message = 'Are you sure you want to delete this item?' %}{% endif %}
+
+<form method="post" action="{{ delete.path }}"
+      onsubmit="return confirm('{{ confirm_message }}');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ delete.entity_id) }}">
+    <button type="submit">
+        <iconify-icon icon="material-symbols:delete"
+                      class="{{ icon_style }}"></iconify-icon>
+    </button>
+</form>

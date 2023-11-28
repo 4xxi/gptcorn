@@ -1,0 +1,13 @@
+# Read the documentation at https://github.com/thephpleague/flysystem-bundle/blob/master/docs/1-getting-started.md
+flysystem:
+    storages:
+        avatar.storage:
+            adapter: 'aws'
+            options:
+                client: Aws\S3\S3Client
+                bucket: '%minio_avatar_bucket_name%'
+        import_collection.storage:
+            adapter: 'aws'
+            options:
+                client: Aws\S3\S3Client
+                bucket: '%minio_import_bucket_name%'

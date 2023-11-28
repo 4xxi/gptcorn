@@ -1,0 +1,64 @@
+<ul role="list" class="divide-y divide-gray-100 mt-4 mb-4">
+    {% for shared_collection in shared_collections %}
+        <li class="flex items-center justify-between gap-x-2 py-4">
+            <div class="flex items-start">
+                {% if app.user.avatar %}
+                    <img class="h-12 w-12 rounded-full bg-gray-50 mr-2" src="{{ path('app_user_show_avatar', {'id': shared_collection.sharedWithUser.id}) }}" alt="{{ shared_collection.sharedWithUser.name }}">
+                {% else %}
+                    <img class="h-12 w-12 rounded-full bg-gray-50 mr-2" src="{{ asset('images/avatar.svg') }}" alt="{{ shared_collection.sharedWithUser.name }}">
+                {% endif %}
+                <div class="min-w-0">
+                    <div class="flex items-start gap-x-3">
+                        <p class="text-sm font-semibold leading-6 text-gray-900">{{ shared_collection.sharedWithUser.name }}
+                            ({{ shared_collection.sharedWithUser.email }})</p>
+                        {% if shared_collection.permissions == 0 %}
+                            <p class="rounded-md whitespace-nowrap mt-0.5 px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset text-gray-600 bg-gray-50 ring-gray-500/10">
+                                read only</p>
+                        {% endif %}
+                    </div>
+                    <div class="mt-1 flex items-center gap-x-2 text-xs leading-5 text-gray-500">
+                        <p class="whitespace-nowrap">Shared
+                            <time
+                                datetime="{{ shared_collection.createdAt|date }}">{{ shared_collection.createdAt|time_diff }}</time>
+                        </p>
+                        <svg viewBox="0 0 2 2" class="h-0.5 w-0.5 fill-current">
+                            <circle cx="1" cy="1" r="1"/>
+                        </svg>
+                        <p class="truncate">by
+                            <a class="hover:underline" href="mailto:{{ shared_collection.sharedByUser.email }}">
+                                {{ shared_collection.sharedByUser.name }}
+                            </a>
+                        </p>
+                        <svg viewBox="0 0 2 2" class="h-0.5 w-0.5 fill-current">
+                            <circle cx="1" cy="1" r="1"/>
+                        </svg>
+                        <p class="truncate">Owner:
+                            <span>{{ shared_collection.collection.user.name }} ({{ shared_collection.collection.user.email }})</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            {% set is_shared_withuser = app.user == shared_collection.sharedWithUser %}
+            {% if is_owner is not defined %}{% set is_owner = app.user == shared_collection.collection.user %}{% endif %}
+            {% if can_write is not defined %}{% set can_write = shared_collection.collection.permissions(app.user) == constant('App\\Entity\\EntityWithPermissionsInterface::WRITE_PERMISSION') %}{% endif %}
+            <div class="flex flex-none items-center gap-x-2">
+                {% set edit_path = is_owner
+                    ? path('app_collection_edit_share_permissions', {'id': shared_collection.id})
+                    : (can_write ? path('app_shared_collection_edit_permissions', {'id': shared_collection.id}) : null)
+                %}
+                {% set delete = can_write
+                    ? {'path': path('app_shared_collection_delete', {'id': shared_collection.id}),'entity_id': shared_collection.id}
+                    : (is_shared_withuser ? {'path': path('app_shared_collection_delete', {'id': shared_collection.id}),'entity_id': shared_collection.id} : null)
+                %}
+
+                {% include 'components/_inline_buttons.html.twig' with {
+                    'object': shared_collection,
+                    'edit': edit_path,
+                    'delete': delete,
+                } %}
+            </div>
+        </li>
+    {% endfor %}
+</ul>
+

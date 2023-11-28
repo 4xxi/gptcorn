@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit PromptTemplate{% endblock %}
+
+{% block breadcrumbs %}
+    {% if collection is defined and collection %}
+        {% if isOwner is defined and isOwner %}
+            {% include 'default/_breadcrumbs.html.twig' with {
+                'items': [
+                    {'name': 'Collections', 'url': path('app_collection_index')},
+                    {'name': collection.title, 'url': path('app_collection_show', {'id': collection.id})},
+                    {'name': 'Edit: '~prompt_template.title, 'url': '#'},
+                ]
+            } %}
+        {% else %}
+            {% include 'default/_breadcrumbs.html.twig' with {
+                'items': [
+                    {'name': 'Shared Collections', 'url': path('app_shared_collection_index')},
+                    {'name': collection.title, 'url': path('app_shared_collection_show', {'id': collection.id})},
+                    {'name': 'Edit: '~prompt_template.title, 'url': '#'},
+                ]
+            } %}
+        {% endif %}
+    {% else %}
+        {% include 'default/_breadcrumbs.html.twig' with {
+            'items': [
+                {'name': 'Prompt Templates', 'url': path('app_prompt_template_index')},
+                {'name': 'Edit: '~prompt_template.title, 'url': '#'},
+            ]
+        } %}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div class="max-w-xl mb-8">
+            {% include 'components/_subheading.html.twig' with {'title': 'Edit Prompt Template'} %}
+            {{ include('prompt_template/_form.html.twig', {'button_label': 'Update'}) }}
+        </div>
+        <div class="mb-8">
+            {% include 'components/_subheading.html.twig' with {'title': 'Available placeholders'} %}
+            {% include 'placeholder/_list.html.twig' with {'placeholders': placeholders} %}
+        </div>
+    </div>
+
+    {% include 'components/_divider_with_buttons.html.twig' with {
+        'edit': path('app_prompt_template_edit', {'id': prompt_template.id}),
+        'delete': {'path': path('app_prompt_template_delete', {'id': prompt_template.id}),'entity_id': prompt_template.id},
+        'favorite': path('app_prompt_template_favorite', {'id': prompt_template.id}),
+        'object': prompt_template,
+        'clone': path('app_prompt_template_clone', {'id': prompt_template.id}),
+    } %}
+    {% include 'components/_back_button.html.twig' with {'path': path('app_prompt_template_index')} %}
+{% endblock %}

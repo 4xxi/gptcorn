@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Category{% endblock %}
+
+{% block breadcrumbs %}
+    {% include 'default/_breadcrumbs.html.twig' with {
+        'items': [
+            {'name': 'Placeholder Categories', 'url': path('app_category_index')},
+            {'name': 'Edit: '~category.title, 'url': '#'},
+        ]
+    } %}
+{% endblock %}
+
+{% block content %}
+    {% include 'components/_subheading.html.twig' with {'title': 'Edit Category'} %}
+
+    <div class="max-w-xl mb-8">
+        {{ include('category/_form.html.twig', {'button_label': 'Update'}) }}
+    </div>
+
+    {% include 'components/_divider_with_buttons.html.twig' with {
+        'edit': path('app_category_edit', {'id': category.id}),
+        'delete': {'path': path('app_category_delete', {'id': category.id}),'entity_id': category.id},
+        'object': category,
+    } %}
+
+    {% include 'components/_back_button.html.twig' with {'path': path('app_category_index')} %}
+
+{% endblock %}

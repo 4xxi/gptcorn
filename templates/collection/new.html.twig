@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Collection{% endblock %}
+
+{% block breadcrumbs %}
+    {% include 'default/_breadcrumbs.html.twig' with {
+        'items': [
+            {'name': 'Collections', 'url': path('app_collection_index')},
+            {'name': 'New', 'url': '#'},
+        ]
+    } %}
+{% endblock %}
+
+{% block content %}
+    {% include 'components/_subheading.html.twig' with {'title': 'Create Collection'} %}
+
+    <div class="max-w-xl mb-8">
+        <div class="mt-8 bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-3" role="alert">
+            <p class="font-bold">Heads up!</p>
+            <p class="text-sm">Please add all the placeholders from your prompt templates to this collection. If you miss any, the prompt might show the placeholder text instead of the actual value, which could lead to mistakes.</p>
+        </div>
+        {{ include('collection/_form.html.twig') }}
+    </div>
+
+    {% include 'components/_back_button.html.twig' with {'path': path('app_collection_index')} %}
+{% endblock %}

@@ -1,0 +1,56 @@
+{% set button_count = 0 %}
+{% if edit is defined and edit %}{% set button_count = button_count + 1 %}{% endif %}
+{% if run is defined and run %}{% set button_count = button_count + 1 %}{% endif %}
+{% if clone is defined and clone %}{% set button_count = button_count + 1 %}{% endif %}
+{% if favorite is defined and favorite %}{% set button_count = button_count + 1 %}{% endif %}
+{% if share is defined and share %}{% set button_count = button_count + 1 %}{% endif %}
+{% if delete is defined and delete %}{% set button_count = button_count + 1 %}{% endif %}
+
+<div class="relative mb-8">
+    <div class="absolute inset-0 flex items-center" aria-hidden="true">
+        <div class="w-full border-t border-gray-300"></div>
+    </div>
+    <div class="relative flex justify-center">
+    <span class="isolate inline-flex -space-x-px rounded-md shadow-sm">
+        {% if edit is defined and edit %}
+            <a href="{{ edit }}">
+            <iconify-icon icon="material-symbols:edit-outline"
+                          class="relative text-xl inline-flex items-center {{ button_count == 1 ? 'rounded-md' : 'rounded-l-md' }} bg-white px-3 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"></iconify-icon>
+        </a>
+        {% endif %}
+        {% if run is defined and run %}
+            <a href="{{ run }}" class="">
+                <iconify-icon
+                    icon="clarity:play-line"
+                    class="relative text-xl inline-flex items-center bg-white px-3 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"></iconify-icon>
+            </a>
+        {% endif %}
+        {% if clone is defined and clone %}
+            <a href="{{ clone }}" onclick="return confirm('Are you sure you want to clone this item?');">
+                <iconify-icon icon="clarity:clone-line"
+                              class="relative text-xl inline-flex items-center bg-white px-3 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"></iconify-icon>
+            </a>
+        {% endif %}
+        {% if favorite is defined and favorite %}
+            <a href="{{ favorite }}">
+            <iconify-icon
+                icon="{% if object.favorite %}material-symbols:star{% else %}material-symbols:star-outline{% endif %}"
+                class="relative text-xl inline-flex items-center bg-white px-3 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"></iconify-icon>
+        </a>
+        {% endif %}
+        {% if share is defined and share %}
+            <a href="{{ share }}" class="">
+                <iconify-icon
+                    icon="clarity:share-line"
+                    class="relative text-xl inline-flex items-center bg-white px-3 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"></iconify-icon>
+            </a>
+        {% endif %}
+        {% if delete is defined and delete %}
+            {% include 'components/_delete_form.html.twig' with {
+                'icon_style': 'relative text-xl inline-flex items-center rounded-r-md bg-white px-3 py-2 text-red-500 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10',
+                'delete': delete,
+            } %}
+        {% endif %}
+    </span>
+    </div>
+</div>
