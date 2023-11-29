@@ -2,7 +2,7 @@
     {% for shared_collection in shared_collections %}
         <li class="flex items-center justify-between gap-x-2 py-4">
             <div class="flex items-start">
-                {% if app.user.avatar %}
+                {% if shared_collection.sharedWithUser.avatar %}
                     <img class="h-12 w-12 rounded-full bg-gray-50 mr-2" src="{{ path('app_user_show_avatar', {'id': shared_collection.sharedWithUser.id}) }}" alt="{{ shared_collection.sharedWithUser.name }}">
                 {% else %}
                     <img class="h-12 w-12 rounded-full bg-gray-50 mr-2" src="{{ asset('images/avatar.svg') }}" alt="{{ shared_collection.sharedWithUser.name }}">
